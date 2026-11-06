@@ -2,7 +2,7 @@
 
 A free, offline-first reviewer for the **Philippine Civil Service Exam (CSE-PPT)**, Professional and Subprofessional levels. It runs in any browser as an installable web app, and as an Android app.
 
-**Web app:** https://n0rrtthh.github.io/Pasado---CSC-Exam-Reviewer/
+**Web app:** https://n0rrtthh.github.io/Pasado-CSC-Exam-Reviewer-App/
 
 **Android app:** download the APK from [Releases](https://github.com/N0rrtthh/Pasado---CSC-Exam-Reviewer/releases/latest)
 
