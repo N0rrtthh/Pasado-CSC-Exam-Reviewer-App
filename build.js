@@ -22,7 +22,6 @@ const html = `<!doctype html>
 <meta name="theme-color" content="#13223a">
 <meta name="description" content="Offline reviewer for the 2027 Philippine Civil Service Exam: mock exams, drills, and no-calculator math lessons.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -65,7 +64,7 @@ fs.writeFileSync(path.join(out, 'manifest.webmanifest'), JSON.stringify({
 fs.writeFileSync(path.join(out, 'sw.js'), `// Offline cache for Pasado. The version changes on every build so phones pick up updates.
 const V = '${version}';
 const FONTS = 'pasado-fonts';
-const ASSETS = ['./', 'index.html', 'bank.js', 'bank2.js', 'lessons.js', 'game.js', 'hacks.js', 'vendor/gsap.min.js', 'vendor/swiper-bundle.min.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-180.png', 'icons/maskable-512.png'];
+const ASSETS = ['./', 'index.html', 'bank.js', 'bank2.js', 'lessons.js', 'game.js', 'hacks.js', 'vendor/gsap.min.js', 'vendor/swiper-bundle.min.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-180.png', 'icons/maskable-512.png', 'icons/favicon.svg', 'icons/favicon-32.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V && k !== FONTS).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', e => {

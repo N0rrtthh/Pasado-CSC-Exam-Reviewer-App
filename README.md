@@ -4,7 +4,7 @@ A free, offline-first reviewer for the **Philippine Civil Service Exam (CSE-PPT)
 
 **Web app:** https://n0rrtthh.github.io/Pasado-CSC-Exam-Reviewer-App/
 
-**Android app:** download the APK from [Releases](https://github.com/N0rrtthh/Pasado---CSC-Exam-Reviewer/releases/latest)
+**Android app:** download the APK from [Releases](https://github.com/N0rrtthh/Pasado-CSC-Exam-Reviewer-App/releases/latest)
 
 > Pasado is an independent study tool. It is not affiliated with or endorsed by the Civil Service Commission.
 
@@ -49,4 +49,4 @@ One-time setup: **Settings → Pages → Source: GitHub Actions**.
 
 ## Android app
 
-The Android build is made locally with [Capacitor](https://capacitorjs.com) (`npm install`, then `npm run android`) and is not part of this repository. Signed APKs are published under [Releases](https://github.com/N0rrtthh/Pasado---CSC-Exam-Reviewer/releases).
+The Android build is made locally with [Capacitor](https://capacitorjs.com) (`npm install`, then `npm run android`) and is not part of this repository. Signed APKs are published under [Releases](https://github.com/N0rrtthh/Pasado-CSC-Exam-Reviewer-App/releases).

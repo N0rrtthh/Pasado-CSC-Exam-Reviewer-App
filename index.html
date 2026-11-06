@@ -1,4 +1,6 @@
 <title>Pasado CSE Reviewer</title>
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -447,20 +449,59 @@ html[data-nav="down"]::view-transition-new(root){animation:.4s var(--ios) both v
 .nav-pop{animation:.38s var(--ios) both vtPopIn}
 .nav-up{animation:.44s var(--ios) both vtUp}
 
-/* launch screen */
-#splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:24px;text-align:center;transition:opacity .45s var(--ease),transform .45s var(--ease)}
-#splash.out{opacity:0;transform:scale(1.04);pointer-events:none}
+/* launch screen
+   An answer bubble gets shaded like on the real exam sheet, then grows
+   into the Pasado mark while the ring is drawn around it; the name
+   rises letter by letter and the passing rating counts up to 80.00.
+   On exit the screen closes in on the logo like an iris. Later
+   launches play a short version. */
+#splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:24px;text-align:center;
+  clip-path:circle(150vmax at 50% var(--sp-cy,42%));transition:clip-path .62s var(--ios),opacity .3s .4s linear}
+#splash::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background:radial-gradient(circle at 50% 40%,var(--accent-soft) 0,transparent 55%)}
+#splash.out{clip-path:circle(0px at 50% var(--sp-cy,42%));opacity:0;pointer-events:none}
+#splash.out .sp-logo{transform:scale(.86);transition:transform .5s var(--ios)}
+.sp-stage{position:relative;width:112px;height:112px}
+.sp-logo{position:absolute;inset:0}
 .sp-logo svg{display:block;overflow:visible}
-.sp-ring{fill:none;stroke:var(--drop);stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transform:rotate(-90deg);transform-origin:60px 60px;animation:draw .9s .1s var(--ios) forwards}
-.sp-fill{fill:var(--lead);transform-origin:60px 60px;transform:scale(0);animation:spFill .55s .7s var(--ios) forwards}
-.sp-p{fill:var(--bg);font:800 44px var(--f-display);opacity:0;animation:spP .4s 1.05s var(--ease) forwards}
-.sp-word{font:780 34px/1.1 var(--f-display);letter-spacing:-.03em;margin-top:14px;opacity:0;animation:rise .5s 1.15s var(--ease) both}
-.sp-tag{font-size:15px;font-weight:600;opacity:0;animation:rise .5s 1.3s var(--ease) both}
-.sp-tag2{font-size:13px;color:var(--muted);opacity:0;animation:rise .5s 1.4s var(--ease) both}
-.sp-foot{position:absolute;bottom:calc(28px + env(safe-area-inset-bottom,0px));left:24px;right:24px;font-size:11.5px;color:var(--faint);opacity:0;animation:rise .5s 1.5s var(--ease) both}
-#splash.quick .sp-ring,#splash.quick .sp-fill,#splash.quick .sp-p,#splash.quick .sp-word,#splash.quick .sp-tag,#splash.quick .sp-tag2,#splash.quick .sp-foot{animation-duration:.35s;animation-delay:0s}
-@keyframes spFill{0%{transform:scale(0)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+.sp-ring{fill:none;stroke:var(--drop);stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transform:rotate(-90deg);transform-origin:60px 60px;animation:spOn .01s 1.02s forwards,draw .7s 1.02s var(--ios) forwards}
+@keyframes spOn{to{opacity:1}}
+.sp-fill{fill:var(--lead);transform-origin:60px 60px;transform:scale(0);animation:spFill .5s .98s var(--ios) forwards}
+.sp-p{fill:var(--bg);font:800 44px var(--f-display);opacity:0;animation:spP .4s 1.25s var(--ease) forwards}
+.sp-glint{fill:none;stroke:var(--drop);stroke-width:2;opacity:0;transform-origin:60px 60px;animation:spGlint .9s 1.55s var(--ease) forwards}
+/* the answer row: A B C D, B gets shaded and becomes the logo */
+.sp-choices{position:absolute;left:50%;top:50%;display:flex;gap:10px;transform:translate(-50%,-50%)}
+.sp-ch{position:relative;width:22px;height:22px;border-radius:50%;border:2px solid var(--faint);display:grid;place-items:center;
+  font:700 10px var(--f-display);color:var(--faint);opacity:0;animation:spCh .32s calc(.05s + var(--i)*.06s) var(--ease) forwards, spAway .25s .78s var(--ease) forwards}
+.sp-ch::before{content:attr(data-l)}
+.sp-ch.pick{border-color:var(--ink);color:var(--ink);overflow:hidden;animation:spCh .32s calc(.05s + var(--i)*.06s) var(--ease) forwards, spGrow .42s .72s var(--ios) forwards}
+.sp-ch.pick::after{content:"";position:absolute;inset:-2px;border-radius:50%;background:
+  repeating-linear-gradient(-58deg,var(--lead) 0 2.2px,color-mix(in srgb,var(--lead) 82%,transparent) 2.2px 3.4px);
+  clip-path:inset(0 100% 0 0);animation:spShade .34s .38s cubic-bezier(.5,0,.3,1) forwards}
+/* the name and the pass mark */
+.sp-word{display:flex;justify-content:center;font:780 34px/1.1 var(--f-display);letter-spacing:-.03em;margin-top:16px}
+.sp-word span{display:inline-block;opacity:0;transform:translateY(14px);animation:spLetter .5s calc(1.28s + var(--i)*.04s) var(--ios) forwards}
+.sp-tag{font-size:15px;font-weight:600;opacity:0;animation:rise .5s 1.55s var(--ease) both}
+.sp-score{display:flex;align-items:baseline;gap:8px;margin-top:14px;opacity:0;animation:rise .45s 1.62s var(--ease) both}
+.sp-num{font:700 22px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--ok);letter-spacing:-.02em}
+.sp-of{font-size:12px;color:var(--muted)}
+.sp-bar{width:168px;height:4px;border-radius:4px;background:var(--line);overflow:hidden;opacity:0;animation:rise .45s 1.62s var(--ease) both}
+.sp-bar i{display:block;height:100%;width:100%;border-radius:inherit;background:var(--ok);transform:scaleX(0);transform-origin:left;animation:spBar .75s 1.7s var(--ios) forwards}
+.sp-tag2{font-size:13px;color:var(--muted);margin-top:8px;opacity:0;animation:rise .5s 1.8s var(--ease) both}
+.sp-foot{position:absolute;bottom:calc(28px + env(safe-area-inset-bottom,0px));left:24px;right:24px;font-size:11.5px;color:var(--faint);opacity:0;animation:rise .5s 1.9s var(--ease) both}
+/* later launches: no answer row, everything at once */
+#splash.quick .sp-choices{display:none}
+#splash.quick .sp-ring{animation:spOn .01s forwards,draw .4s var(--ios) forwards}
+#splash.quick .sp-fill,#splash.quick .sp-p,#splash.quick .sp-word span,#splash.quick .sp-tag,#splash.quick .sp-score,#splash.quick .sp-bar,#splash.quick .sp-bar i,#splash.quick .sp-tag2,#splash.quick .sp-foot,#splash.quick .sp-glint{animation-duration:.4s;animation-delay:calc(var(--i,0)*.02s)}
+@keyframes spFill{0%{transform:scale(.26)}65%{transform:scale(1.07)}100%{transform:scale(1)}}
 @keyframes spP{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes spCh{from{opacity:0;transform:translateY(8px) scale(.8)}to{opacity:1;transform:none}}
+@keyframes spAway{to{opacity:0;transform:scale(.6)}}
+@keyframes spShade{to{clip-path:inset(0 0 0 0)}}
+@keyframes spGrow{0%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0;transform:translateX(16px) scale(3.6)}}
+@keyframes spLetter{to{opacity:1;transform:none}}
+@keyframes spBar{to{transform:scaleX(1)}}
+@keyframes spGlint{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.28)}}
 
 /* welcome tour */
 .onb{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(22px,env(safe-area-inset-left,0px));animation:rise .4s var(--ease) both}
@@ -748,9 +789,14 @@ body.scratch-open main{padding-bottom:calc(min(64vh,600px) + 30px)}
 </style>
 
 <div id="splash" aria-hidden="true">
-  <div class="sp-logo"><svg viewBox="0 0 120 120" width="112" height="112"><circle class="sp-ring" cx="60" cy="60" r="54" pathLength="1"/><circle class="sp-fill" cx="60" cy="60" r="42"/><text class="sp-p" x="60" y="62" text-anchor="middle" dominant-baseline="middle">P</text></svg></div>
-  <div class="sp-word">Pasado</div>
+  <div class="sp-stage">
+    <div class="sp-logo"><svg viewBox="0 0 120 120" width="112" height="112"><circle class="sp-glint" cx="60" cy="60" r="54"/><circle class="sp-ring" cx="60" cy="60" r="54" pathLength="1"/><circle class="sp-fill" cx="60" cy="60" r="42"/><text class="sp-p" x="60" y="62" text-anchor="middle" dominant-baseline="middle">P</text></svg></div>
+    <div class="sp-choices"><span class="sp-ch" data-l="A" style="--i:0"></span><span class="sp-ch pick" data-l="B" style="--i:1"></span><span class="sp-ch" data-l="C" style="--i:2"></span><span class="sp-ch" data-l="D" style="--i:3"></span></div>
+  </div>
+  <div class="sp-word"><span style="--i:0">P</span><span style="--i:1">a</span><span style="--i:2">s</span><span style="--i:3">a</span><span style="--i:4">d</span><span style="--i:5">o</span></div>
   <div class="sp-tag">Civil Service Exam Reviewer</div>
+  <div class="sp-score"><span class="sp-num">0.00</span><span class="sp-of">passing rating</span></div>
+  <div class="sp-bar"><i></i></div>
   <div class="sp-tag2">CSE-PPT 2027 · Professional &amp; Subprofessional</div>
   <div class="sp-foot">Independent study app. Not affiliated with the Civil Service Commission.</div>
 </div>
@@ -1308,9 +1354,28 @@ function hideSplash() {
   const sp = $('#splash'); if (!sp) return;
   const seen = LS.get('pasado.launched', false); LS.set('pasado.launched', true);
   if (seen) sp.classList.add('quick');
+  // Count the pass mark up to 80.00 alongside the bar.
+  const num = sp.querySelector('.sp-num');
+  if (num) {
+    const delay = calm() ? 0 : seen ? 80 : 1700, dur = calm() ? 0 : seen ? 380 : 750;
+    const t0 = performance.now() + delay;
+    const tick = now => {
+      const k = dur ? Math.min(1, Math.max(0, (now - t0) / dur)) : 1;
+      num.textContent = (80 * (1 - Math.pow(1 - k, 3))).toFixed(2);
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
   let gone = false;
-  const done = () => { if (gone) return; gone = true; sp.classList.add('out'); setTimeout(() => { sp.remove(); if (!LS.get('pasado.onboarded', false)) showOnboarding(); }, 460); };
-  setTimeout(done, calm() ? 250 : seen ? 900 : 2300);
+  const done = () => {
+    if (gone) return; gone = true;
+    // Close the screen in on the logo.
+    const lg = sp.querySelector('.sp-stage');
+    if (lg) { const r = lg.getBoundingClientRect(); sp.style.setProperty('--sp-cy', ((r.top + r.height / 2) / innerHeight * 100).toFixed(1) + '%'); }
+    sp.classList.add('out');
+    setTimeout(() => { sp.remove(); if (!LS.get('pasado.onboarded', false)) showOnboarding(); }, 640);
+  };
+  setTimeout(done, calm() ? 250 : seen ? 1000 : 2750);
   sp.addEventListener('click', done);
 }
 
